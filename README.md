@@ -1,79 +1,32 @@
-AI Multi-Agent Healthcare System (Healthcare Chatbot)
-This project is an AI-powered health assistant that analyzes user-described symptoms to predict potential diseases and gives medical advice and sugestions. it  uses multi-modal FastAPI triage engine that combines a custom Hugging Face classification model developed by Ilori Ayomide, Gemini 3, Groq Whisper, and a custom CNN model developed by Adejare to deliver instant, voice-enabled patient care via a lightweight web UI.
+# VitalSync: Multi-Modal AI Triage Engine 🩺
 
-## 🚀 Key Features
+VitalSync is an intelligent, patient-facing self-triage system designed to bridge the gap between initial symptom onset and professional medical care. 
 
-* **Multi-Agent Orchestration:** Uses a custom Hugging Face neural network developed by me (`Iloriayomide/Symptom_Prediction`) for rapid baseline classification, then passes the tensor outputs to Google's Gemini for natural language clinical reasoning.
-* **Voice-Activated Triage:** Integrates Groq's ultra-fast `whisper-large-v3` model, allowing patients to simply speak their symptoms instead of typing.
-* * **Image Upload ** Integrates Adejare's custom model, allowing patients to upload images for futher diagnosis.
-  * Top-K Predictions: Returns the top 3 most likely disease matches with confidence percentages.
-  * Natural Language Processing: Accepts full-sentence descriptions of symptoms (e.g., "I have a high fever and severe headache").
+Moving beyond standard symptom checkers, VitalSync utilizes a **Multi-Agent Hybrid Architecture**. It orchestrates a custom-trained local classification model with state-of-the-art Cloud LLMs to provide users with immediate, highly structured, and empathetic health guidance without requiring heavy server infrastructure.
+
+
+
+## 🚀 Engineering Highlights
+
+* **Multi-Agent Orchestration:** Processes patient input locally using a custom Hugging Face neural network (`Iloriayomide/Symptom_Prediction`) for rapid baseline medical classification, then pipes those tensor outputs to Google's Gemini for natural language clinical reasoning.
+* **Fault-Tolerant Waterfall Fallback:** Engineered for high availability. The system defaults to the bleeding-edge **Gemini 3 Flash** engine. If the API hits a rate limit (HTTP 429), it silently catches the exception and routes the request to a fallback model with zero downtime for the user.
+* **Multi-Modal Voice Processing:** Integrates Groq's `whisper-large-v3` model, allowing patients to dictate their symptoms via audio. The system handles the transcription and triage in milliseconds.
+* **Patient-Centric UI Injection:** The Cloud Agent is strictly prompted to return semantic HTML (rather than raw Markdown) to ensure the frontend instantly renders a beautiful, accessible care plan, including step-by-step home relief and Emergency Red Flags.
 
 ## 🧠 The Tech Stack
-* **Backend:** FastAPI, Python, Uvicorn (Asynchronous REST API)
-* **Local Machine Learning:** Hugging Face `transformers`, PyTorch
-* **Cloud Intelligence:** Google GenAI SDK (Gemini 3 / 2.5), Groq Cloud (Whisper v3)
-* **Security:** `python-dotenv` for strict environment variable isolation
 
-🛠️ Tech Stack
-Python 3.12+
-
-Backend: FastAPI
-
-ML Engine: Hugging Face Transformers & PyTorch
-
-Server: Uvicorn
-
-Frontend: HTML5, CSS3, JavaScript (Fetch API)
-
-📦 Installation & Setup
-1. Clone the Repository
-Bash
-
-git clone <your-repo-url>
-cd healthcare-chatbot
-2. Install Dependencies
-Install the required Python packages listed in requirements.txt:
-
-Bash
-
-pip install -r requirements.txt
-Dependencies include: fastapi, uvicorn, transformers, torch, and pydantic.
-
-3. Run the Backend Server
-Start the FastAPI server using Uvicorn. This will download the model the first time you run it.
-
-Bash
-
-uvicorn main:app --reload
-The API will start at http://127.0.0.1:8000.
-
-The model Iloriayomide/my-symptom-checker-biobert will be cached locally.
-
-4. Launch the Frontend
-Simply open the index.html file in your web browser.
-
-You can double-click the file in your file explorer.
-
-The frontend is pre-configured to send requests to http://127.0.0.1:8000/predict.
-
-🚀 Usage
-Ensure the backend terminal shows Application startup complete.
-
-Open index.html in your browser.
-
-Type your symptoms into the text area (e.g., "I am feeling dizzy and have a stomach ache").
-
-Click "Analyze Symptoms".
-
-View the top 3 predicted conditions and their confidence scores.
+* **Core Backend:** FastAPI, Python, Uvicorn (Asynchronous REST framework)
+* **Local Intelligence:** Hugging Face `transformers`, PyTorch
+* **Cloud Intelligence:** Google GenAI SDK (`gemini-3-flash-preview`), Groq Cloud API
+* **Security & Configuration:** `python-dotenv` for strict environment variable isolation
 
 
-⚠️ Important Disclaimer
-This is an Artificial Intelligence project for educational and demonstration purposes only.
 
-It is not a doctor and should not be used for medical diagnosis.
+## ⚙️ Local Setup & Installation
 
-The predictions are based on statistical patterns in text and may be inaccurate.
+To run the VitalSync engine locally, you will need Python 3.9+ and API keys for both Google AI Studio and Groq.
 
-Always consult a certified medical professional for health advice.
+**1. Clone the repository:**
+```bash
+git clone [https://github.com/your-username/vitalsync-triage.git](https://github.com/your-username/vitalsync-triage.git)
+cd vitalsync-triage
