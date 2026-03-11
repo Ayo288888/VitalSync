@@ -29,7 +29,7 @@ async function toggleRecording() {
             mediaRecorder.start();
             isRecording = true;
             micIcon.textContent = '🛑';
-            micBtn.classList.add('recording-pulse'); // Add a CSS pulse if you have one
+            micBtn.classList.add('recording-pulse');
             showNotification('Recording... Speak now.', 'info');
         } catch (err) {
             console.error("Mic Error:", err);
@@ -48,17 +48,15 @@ async function sendVoiceData(blob) {
     const formData = new FormData();
     formData.append('file', blob, 'audio.wav');
     
-    // Add a temporary "Processing" bubble
     appendMessage("ai", "Transcribing your voice... 🎙️");
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/predict/voice', { method: 'POST', body: formData });
+        // UPDATED: Pointing to your live Render Cloud API
+        const response = await fetch('https://vitalsync-kdtc.onrender.com/predict/voice', { method: 'POST', body: formData });
         const data = await response.json();
         
-        // Remove the "Processing" bubble (optional, or just append the next)
         document.getElementById("symptoms").value = data.transcription;
         
-        // Automatically run the analysis
         initiateScan();
     } catch (e) {
         console.error("Transcription Error:", e);
@@ -72,16 +70,17 @@ function appendMessage(role, text, predictions = null) {
     const msgDiv = document.createElement("div");
     msgDiv.className = role === "user" ? "user-message" : "ai-message";
     
-    // Formatting logic
+    // Formatting logic (Works beautifully with Gemini's HTML output)
     const formattedText = text
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\n/g, '<br>');
 
     let diagHTML = '';
+    // We mock predictions if they come back from the cloud to keep the UI from breaking
     if (predictions && predictions.length > 0) {
         diagHTML = `
             <div class="differential-box" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                <p style="font-size:0.7rem; opacity:0.6; text-transform:uppercase;">Differential Diagnosis</p>
+                <p style="font-size:0.7rem; opacity:0.6; text-transform:uppercase;">System Status</p>
                 ${predictions.map(p => `
                     <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-top:5px;">
                         <span>${p.disease || p.condition}</span>
@@ -111,7 +110,6 @@ async function initiateScan() {
     textarea.value = "";
     textarea.rows = 1;
 
-    // Show "AI is thinking" placeholder
     const thinkingId = "thinking-" + Date.now();
     const thread = document.getElementById("chatThread");
     const thinkingDiv = document.createElement("div");
@@ -125,12 +123,14 @@ async function initiateScan() {
         if (uploadedImages.length > 0) {
             const formData = new FormData();
             formData.append('file', uploadedImages[0].file);
-            response = await fetch('http://127.0.0.1:8000/predict/image', { method: 'POST', body: formData });
+            // UPDATED: Pointing to your live Render Cloud API
+            response = await fetch('https://vitalsync-kdtc.onrender.com/predict/image', { method: 'POST', body: formData });
             uploadedImages = [];
             document.getElementById('imagePreview').innerHTML = "";
         } else {
             conversationHistory.push({ role: "user", content: textInput });
-            response = await fetch('http://127.0.0.1:8000/predict', { 
+            // UPDATED: Pointing to your live Render Cloud API
+            response = await fetch('https://vitalsync-kdtc.onrender.com/predict', { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: JSON.stringify(conversationHistory) }) 
@@ -138,7 +138,7 @@ async function initiateScan() {
         }
 
         const data = await response.json();
-        document.getElementById(thinkingId).remove(); // Remove thinking placeholder
+        document.getElementById(thinkingId).remove(); 
         
         const predictions = data.top_predictions || data.analysis || data.symptom_analysis;
         appendMessage("ai", data.doctor_note, predictions);
