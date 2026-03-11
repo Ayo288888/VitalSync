@@ -19,14 +19,3 @@ Moving beyond standard symptom checkers, VitalSync utilizes a **Multi-Agent Hybr
 * **Local Intelligence:** Hugging Face `transformers`, PyTorch
 * **Cloud Intelligence:** Google GenAI SDK (`gemini-3-flash-preview`), Groq Cloud API
 * **Security & Configuration:** `python-dotenv` for strict environment variable isolation
-
-
-
-## ⚙️ Local Setup & Installation
-
-To run the VitalSync engine locally, you will need Python 3.9+ and API keys for both Google AI Studio and Groq.
-
-**1. Clone the repository:**
-```bash
-git clone [https://github.com/your-username/vitalsync-triage.git](https://github.com/your-username/vitalsync-triage.git)
-cd vitalsync-triage
