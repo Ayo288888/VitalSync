@@ -7,66 +7,66 @@ let uploadedImageBase64 = null;
 // API Configuration - Replace with your Render URL
 const API_BASE_URL = "https://vitalsync-kdtc.onrender.com";
 
-// ========== NEURAL CANVAS BACKGROUND ==========
+// ========== NEURAL CANVAS — delicate web, doesn't block orbs ==========
 (function initNeuralCanvas() {
     const canvas = document.getElementById('neuralCanvas');
     const ctx = canvas.getContext('2d');
     let nodes = [];
-    const NODE_COUNT = 60;
+    const NODE_COUNT = 55;
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        // Reinitialise so nodes fill new size
+        nodes = [];
+        for (let i = 0; i < NODE_COUNT; i++) {
+            nodes.push({
+                x:  Math.random() * canvas.width,
+                y:  Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: (Math.random() - 0.5) * 0.35,
+                r:  Math.random() * 1.2 + 0.4
+            });
+        }
     }
     resize();
     window.addEventListener('resize', resize);
 
-    for (let i = 0; i < NODE_COUNT; i++) {
-        nodes.push({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            vx: (Math.random() - 0.5) * 0.4,
-            vy: (Math.random() - 0.5) * 0.4,
-            r: Math.random() * 2 + 1
-        });
-    }
-
-    function drawCanvas() {
+    function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw connections
+        // Connections — very faint so orb colours show through
         for (let i = 0; i < nodes.length; i++) {
             for (let j = i + 1; j < nodes.length; j++) {
                 const dx = nodes[i].x - nodes[j].x;
                 const dy = nodes[i].y - nodes[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 130) {
+                const d  = Math.sqrt(dx*dx + dy*dy);
+                if (d < 140) {
                     ctx.beginPath();
                     ctx.moveTo(nodes[i].x, nodes[i].y);
                     ctx.lineTo(nodes[j].x, nodes[j].y);
-                    ctx.strokeStyle = `rgba(99,102,241,${0.18 * (1 - dist / 130)})`;
-                    ctx.lineWidth = 0.7;
+                    ctx.strokeStyle = `rgba(255,255,255,${0.07 * (1 - d/140)})`;
+                    ctx.lineWidth = 0.5;
                     ctx.stroke();
                 }
             }
         }
 
-        // Draw nodes
+        // Dots — tiny white sparks
         nodes.forEach(n => {
             ctx.beginPath();
             ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(99,102,241,0.55)';
+            ctx.fillStyle = 'rgba(255,255,255,0.30)';
             ctx.fill();
-
             n.x += n.vx;
             n.y += n.vy;
-            if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
-            if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+            if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
+            if (n.y < 0 || n.y > canvas.height)  n.vy *= -1;
         });
 
-        requestAnimationFrame(drawCanvas);
+        requestAnimationFrame(draw);
     }
-    drawCanvas();
+    draw();
 })();
 
 // ========== SETTINGS PANEL ==========
