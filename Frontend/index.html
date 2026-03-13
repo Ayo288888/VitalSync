@@ -9,6 +9,15 @@
 </head>
 <body class="dark-mode">
 
+<!-- Animated orb layer — visible through all glass surfaces -->
+<div id="orbLayer">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+</div>
+
 <canvas id="neuralCanvas"></canvas>
 
 <div id="settingsPanel" class="settings-panel">
@@ -19,7 +28,7 @@
     <div class="settings-content">
         <div class="setting-group">
             <label>Interface Theme</label>
-            <button onclick="toggleDarkMode()" class="secondary-btn" style="width:100%">Toggle Dark/Light</button>
+            <button onclick="toggleDarkMode()" class="secondary-btn">Toggle Dark/Light</button>
         </div>
         <div class="setting-group">
             <label>Voice Feedback</label>
@@ -38,6 +47,13 @@
             <p id="greeting">Secure Clinical Analysis Active</p>
         </div>
         <div class="header-controls">
+            <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                    <span class="toggle-icon-dark">🌙</span>
+                    <span class="toggle-icon-light">☀️</span>
+                </span>
+            </button>
             <button onclick="toggleSettings()" class="icon-btn" title="Settings">⚙️</button>
             <button onclick="clearChat()" class="icon-btn" title="New Session">🗑️</button>
         </div>
@@ -45,7 +61,6 @@
 
     <div class="main-layout">
         <main class="interaction-area">
-            
             <div id="chatThread" class="chat-thread">
                 <div class="ai-message">
                     <div class="message-icon">🤖</div>
@@ -57,29 +72,24 @@
 
             <div class="chat-input-section">
                 <div id="imagePreview" class="mini-preview-container"></div>
-                
                 <div class="input-container-inner">
-                    <textarea 
-                        id="symptoms" 
-                        oninput="onUserType()" 
+                    <textarea
+                        id="symptoms"
+                        oninput="onUserType()"
                         rows="1"
                         placeholder="Describe your symptoms or answer follow-up questions..."
                     ></textarea>
-                    
                     <div class="input-actions">
                         <button onclick="document.getElementById('fileInput').click()" class="action-icon-btn" title="Attach Image">📁</button>
-                        
                         <button id="micBtn" onclick="toggleRecording()" class="action-icon-btn" title="Voice Input">
                             <span id="micIcon">🎤</span>
                         </button>
-                        
                         <button id="submitBtn" onclick="initiateScan()" class="send-btn">
                             <span>Analyze</span>
                             <span class="btn-icon">🚀</span>
                         </button>
                     </div>
                 </div>
-
                 <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)" style="display:none;">
             </div>
         </main>
